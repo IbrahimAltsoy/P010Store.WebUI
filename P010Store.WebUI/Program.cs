@@ -30,3 +30,8 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+// Katmanlý mimaride iliþki Hiyerarþisi 
+//1- WebUI üzerinden veritabaný iþlemlerini yapabilmek için WebUI ýn dependencies(referanslarýna) Service katmanýna dependencies e sað týklayýp add project references diyerek açýlan pencereden Service katmanýna tik koyupo ok butonuyla pencereyi kapatýp baðlantý kurduk. 
+// 2- Service katmaný da veritabaný iþlemlerini yapabilmek için Data katmanýna eriþmesi gerekiyor, yine depencecies e sað týklayýp add project references diyerek açýlan pencereden Data katmanýna iþaret koyup ekliyoruz. 
+//3- Data katmanaýnýn entitlere ulaþabilmesi gerekiyor ki classlarý kullanarak veritabaný iþlmelerini yapabilsin. Yine ayný yolu izleyerek veya classlarýn üzerine gelip empul e ad project references diyerek data dan entities e eriþim vermemiz gerekiyor. 
