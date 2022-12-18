@@ -18,7 +18,7 @@ namespace P010Store.Entities
 
         [Display(Name = "Durum")]
         public bool IsActive { get; set; }
-        [Display(Name = "Eklenme Tarihi")]
+        [Display(Name = "Eklenme Tarihi"),ScaffoldColumn(false)] //ScaffoldColumn(false) demek viewlerde oluştururken bu alanının bu alanın oluşmasını engellemektir. 
         public DateTime? CreateDate { get; set; } = DateTime.Now;
 
         public virtual ICollection<Product>? Products { get; set; } // Marka ile Ürünler arasında 1 e çok ilişki kurduk
