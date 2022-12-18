@@ -6,6 +6,6 @@ namespace P010Store.Service.Absract
 {
     public interface IService<T> : IRepository<T> where T : class, IEntity, new()
     {
-        object GetAll();
+        
     }
 }
