@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using P010Store.Entities;
 using P010Store.Service.Absract;
-using P010Store.Service.Absract;
 using P010Store.WebUI.Utils;
 
 namespace P010Store.WebUI.Areas.Admin.Controllers
@@ -61,40 +60,51 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
             return View(brand);
         }
 
-        // GET: BrandsController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> EditAsync(int id)
         {
-            return View();
+            var model = await _service.FindAsync(id);
+            return View(model);
         }
 
         // POST: BrandsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> EditAsync(int id, Brand brand, IFormFile? Logo)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    if (Logo is not null) brand.Logo = await FileHelpers.FileLoaderAsync(Logo);
+                    _service.Update(brand);
+                    _service.SaveChanges();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch
+                {
+                    ModelState.AddModelError("", "Hata Oluştu!");
+                }
             }
-            catch
-            {
-                return View();
-            }
+
+            return View(brand);
         }
 
         // GET: BrandsController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
+            var model = await _service.FindAsync(id);
             return View();
         }
 
         // POST: BrandsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Brand brand)
         {
             try
             {
+                _service.Delete(brand);
+                _service.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
