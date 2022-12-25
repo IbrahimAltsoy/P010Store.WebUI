@@ -1,18 +1,24 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using P010Store.Entities;
 using P010Store.Service.Absract;
+using P010Store.WebUI.Utils;
 
 namespace P010Store.WebUI.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class ProductsController : Controller
     {
-        public ProductsController(IService<Product> service)
+        public ProductsController(IService<Product> service, IService<Category> serviceCategory, IService<Brand> serviceBrand)
         {
             _service = service;
+            _serviceCategory = serviceCategory;
+            _serviceBrand = serviceBrand;
         }
         private readonly IService<Product> _service;
+        private readonly IService<Category> _serviceCategory;
+        private readonly IService<Brand> _serviceBrand;
         // GET: ProductsController
         public async Task<ActionResult> Index()
         {
@@ -27,30 +33,47 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
         }
 
         // GET: ProductsController/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
+            ViewBag.CategoryId = new SelectList(await _serviceCategory.GetAllAsync(),"Id", "Name");
+            ViewBag.BrandId = new SelectList(await _serviceBrand.GetAllAsync(), "Id", "Name");
+           
             return View();
         }
 
         // POST: ProductsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> CreateAsyn(Product product, IFormFile? Image)
         {
-            try
+            if (ModelState.IsValid) // Model class ımız olan brand nesnesinin validasyon için koyduğumuz kurallarınıa (örneğin marka adı required-boş geçilemez gibi) uyulmuşsa
             {
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    if (Image is not null)
+                    {
+                        product.Image = await FileHelpers.FileLoaderAsync(Image, filePath: "/wwwroot/Img/Product/");
+                    }
+
+                    _service.Add(product);
+                    _service.SaveChanges();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch
+                {
+                    ModelState.AddModelError("", "Hata Oluştu!");
+                }
             }
-            catch
-            {
-                return View();
-            }
+            ViewBag.CategoryId = new SelectList(await _serviceCategory.GetAllAsync(), "Id", "Name");
+            ViewBag.BrandId = new SelectList(await _serviceBrand.GetAllAsync(), "Id", "Name");
+            return View(product);
         }
 
         // GET: ProductsController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            var model = await _service.FindAsync(id);
+            return View(model); ;
         }
 
         // POST: ProductsController/Edit/5

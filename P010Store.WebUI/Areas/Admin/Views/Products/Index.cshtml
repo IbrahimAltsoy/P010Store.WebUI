@@ -55,7 +55,8 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Image)
+                @*@Html.DisplayFor(modelItem => item.Image)*@
+                    <img src="/Img/Product/@item.Image" height="40" alt="" />
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.UpdateDate)
@@ -79,9 +80,9 @@
                 @Html.DisplayFor(modelItem => item.Brand.Name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a class="btn btn-primary" casp-action="Edit" asp-route-id="@item.Id">Düzenle</a> |
                 
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
 }
