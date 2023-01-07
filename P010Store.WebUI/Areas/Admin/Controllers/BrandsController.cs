@@ -1,26 +1,41 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using P010Store.Entities;
 using P010Store.Service.Absract;
 using P010Store.WebUI.Utils;
+using System.Collections.Generic;
+using System.Data;
 
 namespace P010Store.WebUI.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    [Area("Admin"),Authorize]
     public class BrandsController : Controller
     {
         private readonly IService<Brand> _service; // veritabanı işlemleri için generic olarak tasarladığımız repository sınıfını kullanan service interface ini brand class ı için kullanılmak üzere tanımladık.
-
-        public BrandsController(IService<Brand> service)
+        private readonly IService<Product> service1;
+        public BrandsController(IService<Brand> service, IService<Product> service11)
         {
             _service = service;
+            service1 = service11;
         }
 
         // GET: BrandsController
-        public async Task< IActionResult> Index()
+        public async Task< IActionResult> Index()    
+               
         {
             var model = await _service.GetAllAsync();
-            
+           //var model2 = await service1.GetAllAsync();
+
+
+           // var x = model2.Count();
+           // var y = model.Count();
+           // double count = y - x;
+           
+
+
+
+            //ViewBag.Count = "Toplam miktar: "+count;
 
             return View(model);
         }

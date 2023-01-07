@@ -1,71 +1,75 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using P010Store.Entities;
 using P010Store.Service.Absract;
 
 namespace P010Store.WebUI.Areas.Admin.Controllers
 {
-    [Area("Admin"), Authorize]
-    public class ContactsController : Controller
+    [Area("Admin")]
+    public class UserController : Controller
     {
-
-        public ContactsController(IService<Contact> service)
+        public UserController(IService<User> service)
         {
             _service = service;
         }
-        private readonly IService<Contact> _service;
-        // GET: ContactsController
+        private readonly IService<User> _service;
+        // GET: UserController
         public async Task<ActionResult> Index()
         {
             var model = await _service.GetAllAsync();
             return View(model);
         }
 
-        // GET: ContactsController/Details/5
+        // GET: UserController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: ContactsController/Create
+        // GET: UserController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: ContactsController/Create
+        // POST: UserController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Contact contact)
+        public async Task<ActionResult> CreateAsync(User user)
         {
-            try
+            if (ModelState.IsValid)
             {
-                _service.Add(contact);
-                _service.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    await _service.AddAsync(user);
+                    _service.SaveChanges();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch
+                {
+                    ModelState.AddModelError("", "Hta oluştu.");
+                }
+
             }
-            catch
-            {
-                return View();
-            }
+            return View(user);
+
         }
 
-        // GET: ContactsController/Edit/5
+        // GET: UserController/Edit/5
         public ActionResult Edit(int id)
         {
             var model = _service.Find(id);
             return View(model);
         }
 
-        // POST: ContactsController/Edit/5
+        // POST: UserController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Contact contact)
+        public ActionResult Edit(int id, User user)
         {
             try
             {
-                _service.Update(contact);
+                _service.Update(user);
                 _service.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
@@ -75,22 +79,21 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
             }
         }
 
-        // GET: ContactsController/Delete/5
+        // GET: UserController/Delete/5
         public ActionResult Delete(int id)
         {
             var model = _service.Find(id);
             return View(model);
-           
         }
 
-        // POST: ContactsController/Delete/5
+        // POST: UserController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Contact contact)
+        public ActionResult Delete(int id, User user)
         {
             try
             {
-                _service.Delete(contact);
+                _service.Delete(user);
                 _service.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using P010Store.Data;
 using P010Store.Data.Absract;
 using P010Store.Data.Concrete;
@@ -13,13 +14,23 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<DatabaseContext>();
 // EntityFramework iþlemlerini yapabilmek için kullanýyoruz
+builder.Services.AddTransient(typeof(IProductService), typeof(ProductService));// Projeye özel yaptýðýmýz servisi ekledik
 builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddTransient(typeof(IService<>), typeof(Service<>));
+
 // Veritabaný iþlemleri yapacaðýmýz servisleri ekledik. Burada .net core a eðer sana Iservice interface i kullanma isteði gelirse  Iservice sýnýfýnda bir nesne oluþtur demiþ oluyoruz. 
 //. Net core da 3 farklý yöntemle servicesleri ekliyoruz. 
 //builder.Services.AddSingleton(); AddSingleton(); kullanarak oluþturduðumuz nesneden 1 tane örnek oluþtur ve her seferinde bu örnek kullanýlýr. 
 //builder.Services.AddTransient() yönteminde ise önceden oluþmuþ nesne varsa o kullanýlýr yoksa yenisi oluþtururulur. 
 //builder.Services.AddScoped() yönteminde ise yapýlan istek için yeni bir nesne iöçin oluþturulur. 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(x =>
+{
+    x.LoginPath = "/Admin/Login";
+    x.LogoutPath = "/Admin/Login";
+    //x.Cookie.Name = "Administrator";
+    //x.AccessDeniedPath = "AccessDenied";
+    x.Cookie.MaxAge = TimeSpan.FromDays(1000);
+});
 var app = builder.Build(); 
 
 
@@ -39,6 +50,7 @@ app.MapControllerRoute(
             name: "admin",
             pattern: "{area:exists}/{controller=Main}/{action=Index}/{id?}"
           );
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

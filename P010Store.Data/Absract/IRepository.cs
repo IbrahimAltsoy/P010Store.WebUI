@@ -16,7 +16,7 @@ namespace P010Store.Data.Absract
         int Add(T entity);
         void Update(T entity);
         void Delete(T entity);
-        int SaveChanges(); 
+        int SaveChanges();
         // Asekron metotlar
         Task<T> FindAsync(int id);
         Task<T> FirstOfDefaultAsync(Expression<Func<T, bool>> expression);
@@ -26,5 +26,6 @@ namespace P010Store.Data.Absract
         Task AddAsync(T entity);
         Task<int> SaveChangesAsync();
 
+       
     }
 }

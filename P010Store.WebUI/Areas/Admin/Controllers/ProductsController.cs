@@ -10,19 +10,23 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
     [Area("Admin")]
     public class ProductsController : Controller
     {
-        public ProductsController(IService<Product> service, IService<Category> serviceCategory, IService<Brand> serviceBrand)
+        private readonly IService<Product> _service;
+        private readonly IService<Category> _serviceCategory;
+        private readonly IService<Brand> _serviceBrand;
+        private readonly IProductService _productService;
+        public ProductsController(IService<Product> service, IService<Category> serviceCategory, IService<Brand> serviceBrand, IProductService productService)
         {
             _service = service;
             _serviceCategory = serviceCategory;
             _serviceBrand = serviceBrand;
+            this._productService = productService;
         }
-        private readonly IService<Product> _service;
-        private readonly IService<Category> _serviceCategory;
-        private readonly IService<Brand> _serviceBrand;
+
         // GET: ProductsController
         public async Task<ActionResult> Index()
         {
-            var model = await _service.GetAllAsync();
+            var model = await _productService.GetAllProductsByCategoriesBrandsAsync();
+            //var model = await _service.GetAllAsync();
             return View(model);
         }
 
@@ -44,7 +48,7 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
         // POST: ProductsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAsyn(Product product, IFormFile? Image)
+        public async Task<ActionResult> Create(Product product, IFormFile? Image)
         {
             if (ModelState.IsValid) // Model class ımız olan brand nesnesinin validasyon için koyduğumuz kurallarınıa (örneğin marka adı required-boş geçilemez gibi) uyulmuşsa
             {
@@ -55,8 +59,8 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
                         product.Image = await FileHelpers.FileLoaderAsync(Image, filePath: "/wwwroot/Img/Product/");
                     }
 
-                    _service.Add(product);
-                    _service.SaveChanges();
+                    await _service.AddAsync(product);
+                    await _service.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
                 catch
