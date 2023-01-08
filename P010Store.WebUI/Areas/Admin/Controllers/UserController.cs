@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using P010Store.Entities;
 using P010Store.Service.Absract;
 
 namespace P010Store.WebUI.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    [Area("Admin"), Authorize(Policy = "AdminPolicy")]
     public class UserController : Controller
     {
         public UserController(IService<User> service)

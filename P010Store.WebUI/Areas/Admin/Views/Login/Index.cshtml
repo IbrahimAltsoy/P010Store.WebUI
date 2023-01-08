@@ -26,13 +26,13 @@
                             <div class="card shadow-lg border-0 rounded-lg mt-5">
                                 <div class="card-header"><h3 class="text-center font-weight-light my-4">Login</h3></div>
                                 <div class="card-body">
-                                    <form asp-action="SignIn">
+                                    <form asp-action="Index">
                                         <div class="form-floating mb-3">
-                                            <input class="form-control" id="inputEmail" type="email" name="email" placeholder="name@example.com" />
+                                            <input class="form-control" id="inputEmail" type="email" name="Email" placeholder="name@example.com" />
                                             <label for="inputEmail">Email</label>
                                         </div>
                                         <div class="form-floating mb-3">
-                                            <input class="form-control" id="inputPassword" type="password" placeholder="Şifre" name="password" />
+                                            <input class="form-control" id="inputPassword" type="Password" placeholder="Şifre" name="password" />
                                             <label for="inputPassword">Şifre</label>
                                         </div>
                                         <div class="form-check mb-3">
@@ -40,7 +40,7 @@
                                             <label class="form-check-label" for="inputRememberPassword">Şifreyi Hatırla</label>
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-
+                                            @TempData["mesaj"]
                                             <input type="submit" value="Giriş" class="btn btn-dark" />
                                         </div>
                                     </form>

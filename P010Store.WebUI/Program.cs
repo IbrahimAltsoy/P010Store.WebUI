@@ -23,13 +23,20 @@ builder.Services.AddTransient(typeof(IService<>), typeof(Service<>));
 //builder.Services.AddSingleton(); AddSingleton(); kullanarak oluþturduðumuz nesneden 1 tane örnek oluþtur ve her seferinde bu örnek kullanýlýr. 
 //builder.Services.AddTransient() yönteminde ise önceden oluþmuþ nesne varsa o kullanýlýr yoksa yenisi oluþtururulur. 
 //builder.Services.AddScoped() yönteminde ise yapýlan istek için yeni bir nesne iöçin oluþturulur. 
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(x =>
 {
     x.LoginPath = "/Admin/Login";
-    x.LogoutPath = "/Admin/Login";
-    //x.Cookie.Name = "Administrator";
-    //x.AccessDeniedPath = "AccessDenied";
+    x.LogoutPath = "/Admin/Login/Logout";
+    x.Cookie.Name = "Administrator";
+    x.AccessDeniedPath = "/AccessDenied";
     x.Cookie.MaxAge = TimeSpan.FromDays(1000);
+});
+// Yetkilendirme ayarlarý burada yapýlmýþtýr.
+builder.Services.AddAuthorization(x =>
+{
+    x.AddPolicy("AdminPolicy", policy=> policy.RequireClaim("Role", "Admin"));
+    x.AddPolicy("UserPolicy", policy=> policy.RequireClaim("Role", "User"));
 });
 var app = builder.Build(); 
 

@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using P010Store.Entities;
 using P010Store.Service.Absract;
@@ -16,12 +19,13 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
         {
             _service = service;
         }
-
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
-        public async Task<IActionResult> SignInAsync(string email, string password)
+        [HttpPost]
+        public async Task<IActionResult> Index(string email, string password)
         {
             try
             {
@@ -34,10 +38,11 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
                         new Claim("Role", kullanici.IsAdmin ? "Admin" : "User"),
                         new Claim("UserId", kullanici.Id.ToString())
                     };
-                    var kullaniciKimligi = new ClaimsIdentity(kullaniciHaklari);
+                    var kullaniciKimligi = new ClaimsIdentity(kullaniciHaklari, CookieAuthenticationDefaults.AuthenticationScheme);
                     ClaimsPrincipal principal = new(kullaniciKimligi);
                     await HttpContext.SignInAsync(principal);
-                    return Redirect("/Admin/Main");
+                    return Redirect("/Admin/Main/"); 
+                        
                 }
                 else TempData["Mesaj"] = "Giriş Başarısız!";
             }
@@ -46,6 +51,14 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
                 TempData["Mesaj"] = "Hata Oluştu!";
             }
             return View();
+        }
+        
+        [Route("Admin/Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+
+            return Redirect("/Admin/Login");
         }
     }
 }
