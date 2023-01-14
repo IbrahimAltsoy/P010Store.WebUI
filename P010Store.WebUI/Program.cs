@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using P010Store.Data;
 using P010Store.Data.Absract;
+using P010Store.Data.Concreate;
 using P010Store.Data.Concrete;
 using P010Store.Service.Absract;
 using P010Store.Service.Concreate;
@@ -15,6 +16,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<DatabaseContext>();
 // EntityFramework iþlemlerini yapabilmek için kullanýyoruz
 builder.Services.AddTransient(typeof(IProductService), typeof(ProductService));// Projeye özel yaptýðýmýz servisi ekledik
+builder.Services.AddTransient(typeof(ICategoryService), typeof(CategoryService));
 builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddTransient(typeof(IService<>), typeof(Service<>));
 

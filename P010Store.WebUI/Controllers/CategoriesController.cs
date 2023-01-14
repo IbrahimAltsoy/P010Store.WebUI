@@ -1,12 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using P010Store.Data.Absract;
+using P010Store.Entities;
+using P010Store.Service.Absract;
 
 namespace P010Store.WebUI.Controllers
 {
     public class CategoriesController : Controller
     {
-        public IActionResult Index()
+        private readonly ICategoryService _service;
+
+        public CategoriesController(ICategoryService service)
         {
-            return View();
+            _service = service;
+            
+        }
+        public async Task<IActionResult> Index(int id)
+        {
+            var model = await _service.GetCategoryByProducts(id);
+            return View(model);
         }
     }
 }
