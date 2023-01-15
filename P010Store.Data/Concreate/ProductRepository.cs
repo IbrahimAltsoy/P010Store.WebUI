@@ -20,5 +20,9 @@ namespace P010Store.Data.Concreate
         {
            return await context.Products.Include(c=>c.Category).Include(b=>b.Brand).ToListAsync();
         }
+        public async Task<Product> GetProductByCategoriesBrandsAsync(int id)
+        {
+            return await context.Products.Include(c => c.Category).Include(b => b.Brand).AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+        }
     }
 }

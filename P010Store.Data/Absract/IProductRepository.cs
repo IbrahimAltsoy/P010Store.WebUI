@@ -10,6 +10,7 @@ namespace P010Store.Data.Absract
     public interface IProductRepository:IRepository<Product>
     {
         Task<IEnumerable<Product>> GetAllProductsByCategoriesBrandsAsync();
+        Task<Product> GetProductByCategoriesBrandsAsync(int id);
 
     }
 }

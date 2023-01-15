@@ -19,6 +19,7 @@ builder.Services.AddTransient(typeof(IProductService), typeof(ProductService));/
 builder.Services.AddTransient(typeof(ICategoryService), typeof(CategoryService));
 builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddTransient(typeof(IService<>), typeof(Service<>));
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // Veritabaný iþlemleri yapacaðýmýz servisleri ekledik. Burada .net core a eðer sana Iservice interface i kullanma isteði gelirse  Iservice sýnýfýnda bir nesne oluþtur demiþ oluyoruz. 
 //. Net core da 3 farklý yöntemle servicesleri ekliyoruz. 
