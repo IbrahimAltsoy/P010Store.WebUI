@@ -1,0 +1,3 @@
+﻿--Projeyi tamamladıktan sonra hosting firmasından aldığımız mssql bilgilerini databasecontext deki connection stringteki alanlara eklememiz gereklidir. 
+--P010Store.WebUI sağ tıklayıp publish tuşuna tıklıyoruz. açılan pencere de publish için gerekli yapılandırma ayarlamalar yapılır. Bu ayarlar çıktuı alacağımız klasörü seçip o kdiyerek 
+file:///C:/Users/Lenovo/Desktop/Web%20Tasar%C4%B1m/P010Store.WebUI/P010Store.WebUI/bin/Release/net7.0/publish/
