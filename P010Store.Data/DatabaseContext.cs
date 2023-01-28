@@ -15,7 +15,9 @@ namespace P010Store.Data
         {
             
             optionsBuilder.UseSqlServer("Server=DESKTOP-O97PCTN\\SQLEXPRESS;Database=P010Store;Trusted_Connection=True;TrustServerCertificate=True");
-            
+            //optionsBuilder.UseSqlServer(@"Server=mssql.siteadi.com veya 84.118.123.25; database=P010Store; username=veritabanikullaniciadi; password=veritabanisifresi"); // Canlı ayarları için connection string den : buna benzer bi şey olur  
+
+
             base.OnConfiguring(optionsBuilder);
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
