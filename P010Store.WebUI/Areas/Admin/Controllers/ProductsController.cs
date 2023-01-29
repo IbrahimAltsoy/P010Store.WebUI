@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using P010Store.Entities;
@@ -11,23 +10,22 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
     [Area("Admin"), Authorize(Policy = "AdminPolicy")]
     public class ProductsController : Controller
     {
-        private readonly IService<Product> _service;
+        private readonly IService<Product> _service; // private readonly
         private readonly IService<Category> _serviceCategory;
         private readonly IService<Brand> _serviceBrand;
-        private readonly IProductService _productService;
+        private readonly IProductService _productService; // InvalidOperationException: Unable to resolve service for type 'P010Store.Service.Abstract.IProductService' while attempting to activate 'P010Store.WebUI.Areas.Admin.Controllers.ProductsController'. bu servisi kullandığımızda bu hatayı alırız, bu sorunu çözmek için servisi program.cs de tanımlamamız gerekir.
+
         public ProductsController(IService<Product> service, IService<Category> serviceCategory, IService<Brand> serviceBrand, IProductService productService)
         {
             _service = service;
             _serviceCategory = serviceCategory;
             _serviceBrand = serviceBrand;
-            this._productService = productService;
+            _productService = productService;
         }
-
         // GET: ProductsController
         public async Task<ActionResult> Index()
         {
-            var model = await _productService.GetAllProductsByCategoriesBrandsAsync();
-            //var model = await _service.GetAllAsync();
+            var model = await _productService.GetAllProductsByCategoriesBrandsAsync(); // eskisi _service.GetAll();
             return View(model);
         }
 
@@ -40,26 +38,21 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
         // GET: ProductsController/Create
         public async Task<ActionResult> Create()
         {
-            ViewBag.CategoryId = new SelectList(await _serviceCategory.GetAllAsync(),"Id", "Name");
+            ViewBag.CategoryId = new SelectList(await _serviceCategory.GetAllAsync(), "Id", "Name");
             ViewBag.BrandId = new SelectList(await _serviceBrand.GetAllAsync(), "Id", "Name");
-           
             return View();
         }
 
         // POST: ProductsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Product product, IFormFile? Image)
+        public async Task<ActionResult> CreateAsync(Product product, IFormFile? Image)
         {
-            if (ModelState.IsValid) // Model class ımız olan brand nesnesinin validasyon için koyduğumuz kurallarınıa (örneğin marka adı required-boş geçilemez gibi) uyulmuşsa
+            if (ModelState.IsValid)
             {
                 try
                 {
-                    if (Image is not null)
-                    {
-                        product.Image = await FileHelpers.FileLoaderAsync(Image, filePath: "/wwwroot/Img/Product/");
-                    }
-
+                    if (Image is not null) product.Image = await FileHelpers.FileLoaderAsync(Image, filePath: "/wwwroot/Img/Products/");
                     await _service.AddAsync(product);
                     await _service.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
@@ -69,13 +62,13 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
                     ModelState.AddModelError("", "Hata Oluştu!");
                 }
             }
-            ViewBag.CategoryId = new SelectList(await _serviceCategory.GetAllAsync(), "Id", "Name");
+            ViewBag.CategoryId = new SelectList(await _serviceCategory.GetAllAsync(), "Id", "Name"); // burada ürün ekleme esnasında ekleme başarısız olursa ekrandaki select elementlerine verileri tekrar gönderiyoruz aksi taktirde null reference hatası alırız
             ViewBag.BrandId = new SelectList(await _serviceBrand.GetAllAsync(), "Id", "Name");
             return View(product);
         }
 
         // GET: ProductsController/Edit/5
-        public async Task<ActionResult> Edit(int id)
+        public async Task<ActionResult> EditAsync(int id)
         {
             var model = await _service.FindAsync(id);
             ViewBag.CategoryId = new SelectList(await _serviceCategory.GetAllAsync(), "Id", "Name");
@@ -86,7 +79,7 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
         // POST: ProductsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, Product product, IFormFile? Image)
+        public async Task<ActionResult> EditAsync(int id, Product product, IFormFile? Image)
         {
             if (ModelState.IsValid)
             {
@@ -108,18 +101,22 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
         }
 
         // GET: ProductsController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
-            return View();
+            var model = await _service.FindAsync(id);
+            return View(model);
         }
 
         // POST: ProductsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Product product)
         {
             try
             {
+                FileHelpers.FieRemover(product.Image);
+                _service.Delete(product);
+                _service.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch

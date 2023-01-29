@@ -9,7 +9,7 @@ namespace P010Store.WebAPIUsing.Areas.Admin.Controllers
     public class BrandsController : Controller
     {
         private readonly HttpClient _httpClient;
-        private readonly string _apiAdres = "https://localhost:7141/api/Brands";
+        private readonly string _apiAdres = "https://localhost:7019/api/Brands";
 
         public BrandsController(HttpClient httpClient)
         {
@@ -46,7 +46,7 @@ namespace P010Store.WebAPIUsing.Areas.Admin.Controllers
                 {
                     brand.Logo = await FileHelpers.FileLoaderAsync(Logo);
                     var response = await _httpClient.PostAsJsonAsync(_apiAdres, brand); // _httpClient nesnesi içerisindeki PostAsJsonAsync metoduna parametre olarak Post isteği atacağımız adresi(_apiAdres) ve eklemek istediğimiz nesneyi(brand) verdiğimizde brand i json a çevirerek api ye eklenmek üzere yolluyor. Eğer bi eksik yoksa api brandi ekler ve geriye response nesnesine bir cevap ekler.
-                    if (response.IsSuccessStatusCode) return RedirectToAction(nameof(Index)); // eğer response değişkenine api den IsSuccessStatusCode yani başarılı bir durum kodu dönmüşse sayfayı index e yönlendir
+                   if(response.IsSuccessStatusCode) return RedirectToAction(nameof(Index)); // eğer response değişkenine api den IsSuccessStatusCode yani başarılı bir durum kodu dönmüşse sayfayı index e yönlendir
                 }
                 catch
                 {
@@ -75,7 +75,7 @@ namespace P010Store.WebAPIUsing.Areas.Admin.Controllers
                 {
                     if (Logo is not null) brand.Logo = await FileHelpers.FileLoaderAsync(Logo);
                     var cevap = await _httpClient.PutAsJsonAsync(_apiAdres + "/" + id, brand);
-                    if (cevap.IsSuccessStatusCode) return RedirectToAction(nameof(Index));
+                    if(cevap.IsSuccessStatusCode) return RedirectToAction(nameof(Index));
                 }
                 catch
                 {
@@ -101,7 +101,7 @@ namespace P010Store.WebAPIUsing.Areas.Admin.Controllers
             try
             {
                 var sonuc = await _httpClient.DeleteAsync(_apiAdres + "/" + id);
-                if (sonuc.IsSuccessStatusCode) return RedirectToAction(nameof(Index));
+                if(sonuc.IsSuccessStatusCode) return RedirectToAction(nameof(Index));
             }
             catch
             {

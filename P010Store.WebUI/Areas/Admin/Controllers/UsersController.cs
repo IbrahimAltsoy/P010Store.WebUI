@@ -2,51 +2,48 @@
 using Microsoft.AspNetCore.Mvc;
 using P010Store.Entities;
 using P010Store.Service.Absract;
-using P010Store.WebUI.Utils;
-using System.Drawing.Drawing2D;
 
 namespace P010Store.WebUI.Areas.Admin.Controllers
 {
-    [Area("Admin"), Authorize]
-    public class CarouselController : Controller
+    [Area("Admin"), Authorize(Policy = "AdminPolicy")]
+    public class UsersController : Controller
     {
-        private readonly IService<Carousel> _service;
+        private readonly IService<User> _service;
 
-        public CarouselController(IService<Carousel> service)
+        public UsersController(IService<User> service)
         {
             _service = service;
         }
 
-        // GET: CarouselController
+        // GET: UsersController
         public async Task<ActionResult> IndexAsync()
         {
             var model =await _service.GetAllAsync();
             return View(model);
         }
 
-        // GET: CarouselController/Details/5
+        // GET: UsersController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: CarouselController/Create
+        // GET: UsersController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: CarouselController/Create
+        // POST: UsersController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAsync(Carousel carousel, IFormFile? Image)
+        public async Task<ActionResult> CreateAsync(User user)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    if (Image is not null) carousel.Image = await FileHelpers.FileLoaderAsync(Image);
-                    await _service.AddAsync(carousel);
+                    await _service.AddAsync(user);
                     await _service.SaveChangesAsync();
                     return RedirectToAction(nameof(IndexAsync));
                 }
@@ -55,28 +52,27 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
                     ModelState.AddModelError("", "Hata Oluştu!");
                 }
             }
-
-            return View(carousel);
+            
+            return View(user);
         }
 
-        // GET: CarouselController/Edit/5
-        public async Task<ActionResult> Edit(int id)
+        // GET: UsersController/Edit/5
+        public async Task<ActionResult> EditAsync(int id)
         {
             var model = await _service.FindAsync(id);
             return View(model);
         }
 
-        // POST: CarouselController/Edit/5
+        // POST: UsersController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync(int id, Carousel carousel, IFormFile? Image)
+        public async Task<ActionResult> EditAsync(int id, User user)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    if (Image is not null) carousel.Image = await FileHelpers.FileLoaderAsync(Image);
-                    _service.Update(carousel);
+                    _service.Update(user);
                     await _service.SaveChangesAsync();
                     return RedirectToAction(nameof(IndexAsync));
                 }
@@ -86,26 +82,25 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
                 }
             }
 
-            return View(carousel);
+            return View(user);
         }
 
-        // GET: CarouselController/Delete/5
+        // GET: UsersController/Delete/5
         public async Task<ActionResult> DeleteAsync(int id)
         {
             var model = await _service.FindAsync(id);
             return View(model);
         }
 
-        // POST: CarouselController/Delete/5
+        // POST: UsersController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int id, Carousel carousel)
+        public ActionResult Delete(int id, User user)
         {
             try
             {
-                FileHelpers.FieRemover(carousel.Image);
-                _service.Delete(carousel);
-                await _service.SaveChangesAsync();
+                _service.Delete(user);
+                _service.SaveChanges();
                 return RedirectToAction(nameof(IndexAsync));
             }
             catch

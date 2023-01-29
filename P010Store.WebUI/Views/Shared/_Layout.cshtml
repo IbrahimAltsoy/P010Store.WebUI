@@ -1,16 +1,18 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - P010Store.WebUI</title>
-    <link rel="icon" type="image/x-icon" href="~/startbootstrap-shop-homepage-gh-pages/assets/favicon.ico" />
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <!-- Bootstrap icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
     <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="~/startbootstrap-shop-homepage-gh-pages/css/styles.css" rel="stylesheet" />
+    <link href="/tema/css/styles.css" rel="stylesheet" />
 </head>
 <body>
+    <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid px-4 px-lg-5">
             <a class="navbar-brand" href="/">P010 Store</a>
@@ -20,13 +22,13 @@
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Anasayfa</a></li>
                     @*<li class="nav-item"><a class="nav-link" href="#!">About</a></li>
                     <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#!">All Products</a></li>
-                    <li><hr class="dropdown-divider" /></li>
-                    <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-                    <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
-                    </ul>
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#!">All Products</a></li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li><a class="dropdown-item" href="#!">Popular Items</a></li>
+                            <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
+                        </ul>
                     </li>*@
                     @await Component.InvokeAsync("Categories")
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="/iletisim">İletişim</a></li>
@@ -37,9 +39,8 @@
                         <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i class="bi bi-search"></i></button>
                     </div>
                 </form>
-                 <a class="btn btn-outline-primary" href="/Account/SignIn"><i class="bi bi-person"></i> Üye Girişi</a>
-                <a class="btn btn-outline-primary mx-1" href="/Account/SignUp"><i class="bi bi-person"></i> Kayıt Ol</a>
-
+                <a class="btn btn-outline-primary" href="/Account/SignIn"><i class="bi bi-person"></i> Üye Girişi</a>
+                <a class="btn btn-outline-primary mx-3" href="/Account/SignUp"><i class="bi bi-person"></i> Kayıt Ol</a>
                 <form class="d-flex">
                     <button class="btn btn-outline-dark" type="submit">
                         <i class="bi-cart-fill me-1"></i>
@@ -50,8 +51,7 @@
             </div>
         </div>
     </nav>
-    <!-- Header-->
-
+    
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -60,7 +60,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - P010Store.WebUI - <a asp-area="" asp-controller="Products" asp-action="Index">Ürünlerimiz</a>
+            &copy; 2022 - P010Store.WebUI - <a asp-controller="Products" asp-action="Index">Ürünlerimiz</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

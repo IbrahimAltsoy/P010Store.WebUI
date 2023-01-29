@@ -1,23 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using P010Store.Entities;
 using P010Store.Service.Absract;
+using P010Store.Service.Concreate;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
-namespace P010Store.API.Controllers
+namespace P010Store.WebAPI.Controllers
 {
-    
     [Route("api/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
-        private readonly IService<Product> _service;
 
-        public ProductsController(IProductService productService, IService<Product> service)
+        public ProductsController(IProductService productService)
         {
             _productService = productService;
-            _service = service;
         }
 
         // GET: api/<ProductsController>
@@ -44,27 +40,26 @@ namespace P010Store.API.Controllers
         }
 
         // PUT api/<ProductsController>/5
-        [HttpPut("{id}")]
-        public IActionResult Put([FromBody] Product value)
+        [HttpPut]
+        public async Task<ActionResult> Put([FromBody] Product value)
         {
             _productService.Update(value);
-            _productService.SaveChanges();
+            await _productService.SaveChangesAsync();
             return NoContent();
         }
 
         // DELETE api/<ProductsController>/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
-            var model = _productService.Find(id);
-            if (model == null)
+            var kayit = _productService.Find(id);
+            if (kayit == null)
             {
                 return BadRequest();
             }
-            _productService.Delete(model);
-            _productService.SaveChanges();
+            _productService.Delete(kayit);
+            await _productService.SaveChangesAsync();
             return StatusCode(StatusCodes.Status200OK);
-
         }
     }
 }

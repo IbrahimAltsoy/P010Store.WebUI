@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using P010Store.Entities;
 using P010Store.Service.Absract;
-
 using System.Security.Claims;
 
 namespace P010Store.WebUI.Areas.Admin.Controllers
@@ -19,10 +16,16 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
         {
             _service = service;
         }
-        [HttpGet]
+
         public IActionResult Index()
         {
             return View();
+        }
+        [Route("Admin/Logout")] // eğer uygulamada Admin/Logout url adresine istek gelirse, normalde adresi Admin/Login/Logout olan aşağıdaki metodu çalıştır
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(); // kullanıcının oturumunu kapat-çıkış yap
+            return Redirect("/Admin/Login"); // kullanıcıyı tekrar login giriş ekranına yönlendir
         }
         [HttpPost]
         public async Task<IActionResult> Index(string email, string password)
@@ -41,24 +44,17 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
                     var kullaniciKimligi = new ClaimsIdentity(kullaniciHaklari, CookieAuthenticationDefaults.AuthenticationScheme);
                     ClaimsPrincipal principal = new(kullaniciKimligi);
                     await HttpContext.SignInAsync(principal);
-                    return Redirect("/Admin/Main/"); 
-                        
+                    return Redirect("/Admin/Main");
                 }
                 else TempData["Mesaj"] = "Giriş Başarısız!";
             }
-            catch (Exception)
+            catch (Exception hata)
             {
+                // hata.Message
+                // todo : hatalar db ye loglanacak
                 TempData["Mesaj"] = "Hata Oluştu!";
             }
             return View();
-        }
-        
-        [Route("Admin/Logout")]
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync();
-
-            return Redirect("/Admin/Login");
         }
     }
 }

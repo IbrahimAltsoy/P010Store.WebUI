@@ -4,7 +4,7 @@ using P010Store.Service.Absract;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace P010Store.API.Controllers
+namespace P010Store.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -16,51 +16,48 @@ namespace P010Store.API.Controllers
         {
             _service = service;
         }
-
+        // GET: api/<UsersController>
         [HttpGet]
         public async Task<IEnumerable<User>> GetAsync()
         {
             return await _service.GetAllAsync();
         }
 
-        // GET api/<BrandsController>/5
+        // GET api/<UsersController>/5
         [HttpGet("{id}")]
-        public User Get(int id)
+        public async Task<User> GetAsync(int id)
         {
-            return _service.Find(id);
+            return await _service.FindAsync(id);
         }
 
-        // POST api/<BrandsController>
+        // POST api/<UsersController>
         [HttpPost]
-        public User Post([FromBody] User value)
+        public async Task<User> PostAsync([FromBody] User value)
         {
-            _service.Add(value);
-            _service.SaveChanges();
+            await _service.AddAsync(value);
+            await _service.SaveChangesAsync();
             return value;
         }
 
-        // PUT api/<BrandsController>/5
-        [HttpPut("{id}")]
-        public IActionResult Put([FromBody] User value)
+        // PUT api/<UsersController>/5
+        [HttpPut]
+        public async Task<ActionResult> Put([FromBody] User value)
         {
             _service.Update(value);
-            _service.SaveChanges();
+            await _service.SaveChangesAsync();
             return NoContent();
         }
 
-        // DELETE api/<BrandsController>/5
+        // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
-            var model = _service.Find(id);
-            if (model == null)
-            {
+            var kayit = _service.Find(id);
+            if (kayit == null) 
                 return BadRequest();
-            }
-            _service.Delete(model);
-            _service.SaveChanges();
+            _service.Delete(kayit);
+            await _service.SaveChangesAsync();
             return StatusCode(StatusCodes.Status200OK);
-
         }
     }
 }

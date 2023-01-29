@@ -11,7 +11,7 @@ namespace P010Store.WebAPIUsing.Areas.Admin.Controllers
     public class CarouselController : Controller
     {
         private readonly HttpClient _httpClient;
-        private readonly string _apiAdres = "https://localhost:7141/Api/Carousel";
+        private readonly string _apiAdres = "https://localhost:7019/Api/Carousel";
 
         public CarouselController(HttpClient httpClient)
         {
@@ -46,10 +46,10 @@ namespace P010Store.WebAPIUsing.Areas.Admin.Controllers
             {
                 try
                 {
-                    if (Image is not null)
+                    if (Image is not null) 
                         carousel.Image = await FileHelpers.FileLoaderAsync(Image);
                     var response = await _httpClient.PostAsJsonAsync(_apiAdres, carousel);
-                    if (response.IsSuccessStatusCode)
+                    if (response.IsSuccessStatusCode) 
                         return RedirectToAction(nameof(Index));
                 }
                 catch

@@ -1,41 +1,38 @@
-using P010Store.Data.Absract;
-using P010Store.Data.Concrete;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using P010Store.Data;
 using P010Store.Service.Absract;
 using P010Store.Service.Concreate;
-using Microsoft.AspNetCore.Authentication.Cookies;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<DatabaseContext>();
-// EntityFramework iþlemlerini yapabilmek için kullanýyoruz
-builder.Services.AddTransient(typeof(IProductService), typeof(ProductService));// Projeye özel yaptýðýmýz servisi ekledik
-builder.Services.AddTransient(typeof(ICategoryService), typeof(CategoryService));
-builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
-builder.Services.AddTransient(typeof(IService<>), typeof(Service<>));
-builder.Services.AddSession();
-builder.Services.AddHttpClient();// dotnet xore de web api kullanabilmek için gerekli servisimiz 
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+builder.Services.AddDbContext<DatabaseContext>();
+builder.Services.AddTransient(typeof(IService<>), typeof(Service<>));
+builder.Services.AddTransient<IProductService, ProductService>(); // producta özel yazdýðýmýz servis
+builder.Services.AddTransient<ICategoryService, CategoryService>();
+builder.Services.AddSession(); // Uygulamada session kullanmamýz gerekirse
+builder.Services.AddHttpClient(); // Web API yi kullanabilmemiz için gerekli servis
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+// Authentication : Oturum açma servisi
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(x =>
 {
-    x.LoginPath = "/Admin/Login";
-    x.LogoutPath = "/Admin/Login/Logout";
-    x.Cookie.Name = "Administrator";
-    x.AccessDeniedPath = "/AccessDenied";
-    x.Cookie.MaxAge = TimeSpan.FromDays(1000);
+    x.LoginPath = "/Admin/Login"; // giriþ yapma sayfasý
+    x.AccessDeniedPath = "/AccessDenied"; // giriþ yapan kullanýcýnýn admin yetkisi yoksa AccessDenied sayfasýna yönlendir
+    x.LogoutPath = "/Admin/Login/Logout"; // çýkýþ sayfasý
+    x.Cookie.Name = "Administrator"; // oluþacak kukinin adý
+    x.Cookie.MaxAge = TimeSpan.FromDays(1); // oluþacak kukinin yaþam süresi
 });
-// Yetkilendirme ayarlarý burada yapýlmýþtýr.
+// Authorization : Yetkilendirme
 builder.Services.AddAuthorization(x =>
 {
     x.AddPolicy("AdminPolicy", policy => policy.RequireClaim("Role", "Admin"));
     x.AddPolicy("UserPolicy", policy => policy.RequireClaim("Role", "User"));
 });
+
 var app = builder.Build();
-
-
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -49,19 +46,20 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseSession();// Sesssion için ekledik. 
-app.UseAuthentication();// önce oturum açma sonra yetkilendirme(app.UseAuthorization();) ayarlarý da yapmýþ olduk. 
+app.UseSession(); // Uygulamada session kullanmamýz gerekirse
 
-app.UseAuthorization();
+app.UseAuthentication(); // önce oturum açma
+app.UseAuthorization(); // sonra yetkilendirme
 
 app.MapControllerRoute(
             name: "admin",
             pattern: "{area:exists}/{controller=Main}/{action=Index}/{id?}"
           );
+
 app.MapControllerRoute(
-            name: "default",
-            pattern: "{controller=Home}/{action=Index}/{id?}"
-          );
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.MapControllerRoute(
     name: "custom",
     pattern: "{customurl?}/{controller=Home}/{action=Index}/{id?}");

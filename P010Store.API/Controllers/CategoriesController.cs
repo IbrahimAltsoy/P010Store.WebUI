@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using P010Store.Entities;
 using P010Store.Service.Absract;
+using P010Store.Service.Concreate;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
-namespace P010Store.API.Controllers
+namespace P010Store.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -42,26 +41,25 @@ namespace P010Store.API.Controllers
 
         // PUT api/<CategoriesController>/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Category value)
+        public ActionResult Put(int id, [FromBody] Category value)
         {
             _categoryService.Update(value);
             _categoryService.SaveChanges();
             return NoContent();
         }
 
-        // DELETE api/<BrandsController>/5
+        // DELETE api/<CategoriesController>/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public ActionResult Delete(int id)
         {
-            var model = _categoryService.Find(id);
-            if (model == null)
+            var kayit = _categoryService.Find(id);
+            if (kayit == null) // eğer kayıt bulunamamışsa
             {
-                return BadRequest();
+                return BadRequest(); // geriye geçersiz istek hatası dön ki işlemde sorun olduğunu anlayalım
             }
-            _categoryService.Delete(model);
+            _categoryService.Delete(kayit);
             _categoryService.SaveChanges();
-            return StatusCode(StatusCodes.Status200OK);
-
+            return StatusCode(StatusCodes.Status200OK); // kayıt başarılıysa geriye 200ok ile işlem başarılı mesajı döndür
         }
     }
 }

@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using P010Store.Entities;
 using P010Store.Service.Absract;
 using P010Store.WebUI.Utils;
-using System.Collections.Generic;
-using System.Data;
 
 namespace P010Store.WebUI.Areas.Admin.Controllers
 {
@@ -13,31 +10,19 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
     public class BrandsController : Controller
     {
         private readonly IService<Brand> _service; // veritabanı işlemleri için generic olarak tasarladığımız repository sınıfını kullanan service interface ini brand class ı için kullanılmak üzere tanımladık.
-        private readonly IService<Product> service1;
-        public BrandsController(IService<Brand> service, IService<Product> service11)
+
+        public BrandsController(IService<Brand> service)
         {
             _service = service;
-            service1 = service11;
         }
 
         // GET: BrandsController
-        public async Task< IActionResult> Index()    
-               
+        public async Task<IActionResult> IndexAsync()
         {
-            var model = await _service.GetAllAsync();
-           //var model2 = await service1.GetAllAsync();
+            //var model = _service.GetAll();
+            List<Brand> brands =await _service.GetAllAsync();
 
-
-           // var x = model2.Count();
-           // var y = model.Count();
-           // double count = y - x;
-           
-
-
-
-            //ViewBag.Count = "Toplam miktar: "+count;
-
-            return View(model);
+            return View(brands);
         }
 
         // GET: BrandsController/Details/5
@@ -64,17 +49,18 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
                     brand.Logo = await FileHelpers.FileLoaderAsync(Logo);
                     _service.Add(brand);
                     _service.SaveChanges();
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(IndexAsync));
                 }
                 catch
                 {
                     ModelState.AddModelError("", "Hata Oluştu!");
                 }
             }
-
+            
             return View(brand);
         }
-
+        
+        // POST: BrandsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create2(Brand brand, IFormFile? Logo)
@@ -93,9 +79,11 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
                     ModelState.AddModelError("", "Hata Oluştu!");
                 }
             }
-
+            
             return View(brand);
         }
+
+        // GET: BrandsController/Edit/5
         public async Task<ActionResult> EditAsync(int id)
         {
             var model = await _service.FindAsync(id);
@@ -111,10 +99,10 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
             {
                 try
                 {
-                    if (Logo is not null) brand.Logo = await FileHelpers.FileLoaderAsync(Logo);
+                    if(Logo is not null) brand.Logo = await FileHelpers.FileLoaderAsync(Logo);
                     _service.Update(brand);
                     _service.SaveChanges();
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(IndexAsync));
                 }
                 catch
                 {
@@ -129,7 +117,7 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
         public async Task<ActionResult> DeleteAsync(int id)
         {
             var model = await _service.FindAsync(id);
-            return View();
+            return View(model);
         }
 
         // POST: BrandsController/Delete/5
@@ -139,9 +127,10 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
         {
             try
             {
+                FileHelpers.FieRemover(brand.Logo);
                 _service.Delete(brand);
                 _service.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(IndexAsync));
             }
             catch
             {

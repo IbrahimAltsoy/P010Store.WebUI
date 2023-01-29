@@ -1,4 +1,5 @@
 ﻿@inject IHttpContextAccessor context
+
 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
     <div class="sb-sidenav-menu">
         <div class="nav">
@@ -18,32 +19,31 @@
                     <a class="nav-link" href="/Admin/Brands/Create">Marka Ekle</a>
                 </nav>
             </div>
-
+             
             <a class="nav-link" href="/Admin/Carousel">
                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                 Slider Yönetimi
             </a>
             <a class="nav-link" href="/Admin/Categories">
                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                Kategory Yönetimi
+                Kategori Yönetimi
             </a>
             <a class="nav-link" href="/Admin/Products">
                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                Ürün Yönetimi
+                Ürünler
             </a>
             <a class="nav-link" href="/Admin/Contacts">
-                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                Iletişim Formları
+                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                İletişim Formları
             </a>
-            <a class="nav-link" href="/Admin/User">
+            <a class="nav-link" href="/Admin/Users">
                 <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
                 Kullanıcılar
             </a>
-            
         </div>
     </div>
     <div class="sb-sidenav-footer">
-        <div class="small">Hoşgeldin</div>
-       @context.HttpContext.User.Identity.Name
+        <div class="small">Hoşgeldin:</div>
+        @context.HttpContext.User.Identity.Name
     </div>
 </nav>

@@ -5,7 +5,6 @@ using P010Store.Entities;
 using P010Store.Service.Absract;
 using System.Security.Claims;
 
-
 namespace P010Store.WebAPIUsing.Areas.Admin.Controllers
 {
     [Area("Admin")]

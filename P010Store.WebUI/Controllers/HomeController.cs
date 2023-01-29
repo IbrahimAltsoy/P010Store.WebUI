@@ -9,25 +9,25 @@ namespace P010Store.WebUI.Controllers
     public class HomeController : Controller
     {
         private readonly IService<Product> _service;
-        private readonly IService<Carousel> _service1;
-        private readonly IService<Brand> _service2;
-        private readonly IService<Contact> _service3;
+        private readonly IService<Carousel> _serviceCarousel;
+        private readonly IService<Brand> _serviceBrand;
+        private readonly IService<Contact> _serviceContact;
 
-        public HomeController(IService<Product> service, IService<Carousel> service1, IService<Brand> service2, IService<Contact> service3)
+        public HomeController(IService<Product> service, IService<Carousel> serviceCarousel, IService<Brand> serviceBrand, IService<Contact> serviceContact)
         {
             _service = service;
-            _service1 = service1;
-            _service2 = service2;
-            _service3 = service3;
+            _serviceCarousel = serviceCarousel;
+            _serviceBrand = serviceBrand;
+            _serviceContact = serviceContact;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> IndexAsync()
         {
             var model = new HomePageViewModel()
             {
-                Carousels = await _service1.GetAllAsync(),
-                Products = await _service.GetAllAsync(p => p.IsHome == true),
-                Brands = await _service2.GetAllAsync()
+                Carousels = await _serviceCarousel.GetAllAsync(),
+                Products = await _service.GetAllAsync(p => p.IsHome),
+                Brands = await _serviceBrand.GetAllAsync()
             };
             return View(model);
         }
@@ -36,41 +36,37 @@ namespace P010Store.WebUI.Controllers
         {
             return View();
         }
-        [Route("Iletisim")]
-        public IActionResult ContantUs()
+
+        [Route("iletisim")]
+        public IActionResult ContactUs()
         {
             return View();
         }
-        [Route("Iletisim"), HttpPost]
-        public async Task<IActionResult> ContantUs(Contact contact)
+
+        [Route("iletisim"), HttpPost]
+        public async Task<IActionResult> ContactUsAsync(Contact contact)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid) 
             {
                 try
                 {
-                    await _service3.AddAsync(contact);
-                    await _service3.SaveChangesAsync();
-                    TempData["mesaj"] = "<div class='alert alert-success'>Mesajınız gönderildi. Teşekkürler </div>";
-                    return RedirectToAction(nameof(ContantUs));
+                    await _serviceContact.AddAsync(contact);
+                    await _serviceContact.SaveChangesAsync();
+                    TempData["Mesaj"] = "<div class='alert alert-success'>Mesajınız Gönderildi. Teşekkürler..</div>";
+                    return RedirectToAction("ContactUs");
                 }
                 catch (Exception)
                 {
-
-                    ModelState.AddModelError("", "Hata mesaj mesajınızgönderilmedi.");
+                    ModelState.AddModelError("", "Hata Oluştu! Mesajınız Gönderilemedi!");
                 }
             }
             return View(contact);
         }
-        //public async Task<IActionResult> Brands(int id)
-        //{
-        //    var model = await _service2.FindAsync(id);
-        //    return View(model);
-        //}
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-       
     }
 }

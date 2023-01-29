@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +19,49 @@
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="wwwroot\Img\Brands\" />
     <Folder Include="wwwroot\Img\Slider\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Areas\Admin\Views\Brands\Create.cshtml" />
+    <None Include="Areas\Admin\Views\Brands\Delete.cshtml" />
+    <None Include="Areas\Admin\Views\Brands\Edit.cshtml" />
+    <None Include="Areas\Admin\Views\Brands\Index.cshtml" />
+    <None Include="Areas\Admin\Views\Carousel\Create.cshtml" />
+    <None Include="Areas\Admin\Views\Carousel\Delete.cshtml" />
+    <None Include="Areas\Admin\Views\Carousel\Edit.cshtml" />
+    <None Include="Areas\Admin\Views\Carousel\Index.cshtml" />
+    <None Include="Areas\Admin\Views\Categories\Create.cshtml" />
+    <None Include="Areas\Admin\Views\Categories\Delete.cshtml" />
+    <None Include="Areas\Admin\Views\Categories\Edit.cshtml" />
+    <None Include="Areas\Admin\Views\Categories\Index.cshtml" />
+    <None Include="Areas\Admin\Views\Contacts\Create.cshtml" />
+    <None Include="Areas\Admin\Views\Contacts\Delete.cshtml" />
+    <None Include="Areas\Admin\Views\Contacts\Edit.cshtml" />
+    <None Include="Areas\Admin\Views\Contacts\Index.cshtml" />
+    <None Include="Areas\Admin\Views\Login\Index.cshtml" />
+    <None Include="Areas\Admin\Views\Main\Index.cshtml" />
+    <None Include="Areas\Admin\Views\Products\Create.cshtml" />
+    <None Include="Areas\Admin\Views\Products\Delete.cshtml" />
+    <None Include="Areas\Admin\Views\Products\Edit.cshtml" />
+    <None Include="Areas\Admin\Views\Products\Index.cshtml" />
+    <None Include="Areas\Admin\Views\Shared\Error.cshtml" />
+    <None Include="Areas\Admin\Views\Shared\layoutSidenav.cshtml" />
+    <None Include="Areas\Admin\Views\Shared\TopNav.cshtml" />
+    <None Include="Areas\Admin\Views\Shared\_AdminLayout.cshtml" />
+    <None Include="Areas\Admin\Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <None Include="Areas\Admin\Views\Users\Create.cshtml" />
+    <None Include="Areas\Admin\Views\Users\Delete.cshtml" />
+    <None Include="Areas\Admin\Views\Users\Edit.cshtml" />
+    <None Include="Areas\Admin\Views\Users\Index.cshtml" />
+    <None Include="Areas\Admin\Views\_ViewImports.cshtml" />
+    <None Include="Areas\Admin\Views\_ViewStart.cshtml" />
+    <None Include="Views\Home\Index.cshtml" />
+    <None Include="Views\Home\Privacy.cshtml" />
+    <None Include="Views\Shared\Error.cshtml" />
+    <None Include="Views\Shared\_Layout.cshtml" />
+    <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <None Include="Views\_ViewImports.cshtml" />
+    <None Include="Views\_ViewStart.cshtml" />
   </ItemGroup>
 
 </Project>

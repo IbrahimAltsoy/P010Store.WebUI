@@ -15,7 +15,7 @@ namespace P010Store.WebUI.Controllers
             _service = service;
         }
 
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> IndexAsync(int id)
         {
             var model = new BrandsPageViewModel()
             {

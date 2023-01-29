@@ -4,64 +4,63 @@ using P010Store.Service.Absract;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace P010Store.API.Controllers
+namespace P010Store.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class BrandsController : ControllerBase
     {
-        private readonly IService<Brand> _brandService;
+        private readonly IService<Brand> _service;
 
-        public BrandsController(IService<Brand> brandService)
+        public BrandsController(IService<Brand> service)
         {
-            _brandService = brandService;
+            _service = service;
         }
 
         // GET: api/<BrandsController>
         [HttpGet]
-        public IEnumerable<Brand> Get()
+        public async Task<IEnumerable<Brand>> GetAsync()
         {
-            return _brandService.GetAll(a=>a.IsActive);
+            return await _service.GetAllAsync();
         }
 
         // GET api/<BrandsController>/5
         [HttpGet("{id}")]
         public Brand Get(int id)
         {
-            return _brandService.Find(id);
+            return _service.Find(id);
         }
 
         // POST api/<BrandsController>
         [HttpPost]
         public Brand Post([FromBody] Brand value)
         {
-            _brandService.Add(value);
-            _brandService.SaveChanges();
+            _service.Add(value);
+            _service.SaveChanges();
             return value;
         }
 
         // PUT api/<BrandsController>/5
         [HttpPut("{id}")]
-        public IActionResult Put([FromBody] Brand value)
+        public ActionResult Put([FromBody] Brand value)
         {
-            _brandService.Update(value);
-            _brandService.SaveChanges();
+            _service.Update(value);
+            _service.SaveChanges();
             return NoContent();
         }
 
         // DELETE api/<BrandsController>/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public ActionResult Delete(int id)
         {
-            var model = _brandService.Find(id);
-            if (model==null)
+            var kayit = _service.Find(id);
+            if (kayit == null)
             {
                 return BadRequest();
             }
-            _brandService.Delete(model);
-            _brandService.SaveChanges();
+            _service.Delete(kayit);
+            _service.SaveChanges();
             return StatusCode(StatusCodes.Status200OK);
-
         }
     }
 }

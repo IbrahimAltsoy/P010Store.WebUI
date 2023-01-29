@@ -8,11 +8,11 @@ namespace P010Store.WebUI.Controllers
         {
             return View();
         }
-        public IActionResult SignIn()
+        public IActionResult SignUp()
         {
             return View();
         }
-        public IActionResult SignUp()
+        public IActionResult SignIn()
         {
             return View();
         }

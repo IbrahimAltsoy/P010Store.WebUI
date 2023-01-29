@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using P010Store.Entities;
 using P010Store.Service.Absract;
@@ -9,16 +8,17 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
     [Area("Admin"), Authorize]
     public class ContactsController : Controller
     {
+        private readonly IService<Contact> _service;
 
         public ContactsController(IService<Contact> service)
         {
             _service = service;
         }
-        private readonly IService<Contact> _service;
+
         // GET: ContactsController
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> IndexAsync()
         {
-            var model = await _service.GetAllAsync();
+            var model =await _service.GetAllAsync();
             return View(model);
         }
 
@@ -43,7 +43,7 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
             {
                 _service.Add(contact);
                 _service.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(IndexAsync));
             }
             catch
             {
@@ -67,7 +67,7 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
             {
                 _service.Update(contact);
                 _service.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(IndexAsync));
             }
             catch
             {
@@ -80,7 +80,6 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
         {
             var model = _service.Find(id);
             return View(model);
-           
         }
 
         // POST: ContactsController/Delete/5
@@ -92,7 +91,7 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
             {
                 _service.Delete(contact);
                 _service.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(IndexAsync));
             }
             catch
             {

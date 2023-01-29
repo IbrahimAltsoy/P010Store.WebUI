@@ -1,24 +1,23 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using P010Store.Entities;
 using P010Store.Service.Absract;
 using P010Store.WebUI.Utils;
-using System.Drawing.Drawing2D;
 
 namespace P010Store.WebUI.Areas.Admin.Controllers
 {
     [Area("Admin"), Authorize(Policy = "AdminPolicy")]
     public class CategoriesController : Controller
-
     {
+        private readonly IService<Category> _service;
+
         public CategoriesController(IService<Category> service)
         {
             _service = service;
         }
-        private readonly IService<Category> _service;
+
         // GET: CategoriesController
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> IndexAsync()
         {
             var model =await _service.GetAllAsync();
             return View(model);
@@ -31,28 +30,24 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
         }
 
         // GET: CategoriesController/Create
-        public IActionResult Create()
+        public ActionResult Create()
         {
             return View();
         }
 
-        // POST: BrandsController/Create
+        // POST: CategoriesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateAsync(Category category, IFormFile? Image)
+        public async Task<ActionResult> CreateAsync(Category category, IFormFile? Image)
         {
-            if (ModelState.IsValid) // Model class ımız olan brand nesnesinin validasyon için koyduğumuz kurallarınıa (örneğin marka adı required-boş geçilemez gibi) uyulmuşsa
+            if (ModelState.IsValid)
             {
                 try
                 {
-                    if (Image is not null) 
-                    {
-                        category.Image = await FileHelpers.FileLoaderAsync(Image);
-                    } 
-                   
-                    _service.Add(category);
-                    _service.SaveChanges();
-                    return RedirectToAction(nameof(Index));
+                    if (Image is not null) category.Image = await FileHelpers.FileLoaderAsync(Image);
+                    await _service.AddAsync(category);
+                    await _service.SaveChangesAsync();
+                    return RedirectToAction(nameof(IndexAsync));
                 }
                 catch
                 {
@@ -62,6 +57,7 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
 
             return View(category);
         }
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create2(Category category, IFormFile? Image)
@@ -91,7 +87,7 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
             return View(model);
         }
 
-        // POST: BrandsController/Edit/5
+        // POST: CategoriesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditAsync(int id, Category category, IFormFile? Image)
@@ -100,13 +96,10 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
             {
                 try
                 {
-                    if (Image is not null) 
-                    {
-                        category.Image = await FileHelpers.FileLoaderAsync(Image);
-                    } 
+                    if (Image is not null) category.Image = await FileHelpers.FileLoaderAsync(Image);
                     _service.Update(category);
-                    _service.SaveChanges();
-                    return RedirectToAction(nameof(Index));
+                    await _service.SaveChangesAsync();
+                    return RedirectToAction(nameof(IndexAsync));
                 }
                 catch
                 {
@@ -121,19 +114,20 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
         public async Task<ActionResult> DeleteAsync(int id)
         {
             var model = await _service.FindAsync(id);
-            return View();
+            return View(model);
         }
 
-        // POST: BrandsController/Delete/5
+        // POST: CategoriesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, Category category)
         {
             try
             {
+                FileHelpers.FieRemover(category.Image);
                 _service.Delete(category);
                 _service.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(IndexAsync));
             }
             catch
             {

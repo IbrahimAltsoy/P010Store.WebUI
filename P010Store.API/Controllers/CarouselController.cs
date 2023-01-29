@@ -5,7 +5,7 @@ using P010Store.Service.Concreate;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace P010Store.API.Controllers
+namespace P010Store.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -17,7 +17,6 @@ namespace P010Store.API.Controllers
         {
             _service = service;
         }
-
         // GET: api/<CarouselController>
         [HttpGet]
         public async Task<IEnumerable<Carousel>> GetAsync()
@@ -39,31 +38,29 @@ namespace P010Store.API.Controllers
             await _service.AddAsync(value);
             await _service.SaveChangesAsync();
             return value;
-
         }
 
         // PUT api/<CarouselController>/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Carousel value)
+        public async Task<ActionResult> PutAsync(int id, [FromBody] Carousel value)
         {
             _service.Update(value);
-            _service.SaveChanges();
+            await _service.SaveChangesAsync();
             return NoContent();
         }
 
         // DELETE api/<CarouselController>/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
-            var model = _service.Find(id);
-            if (model == null)
+            var kayit = _service.Find(id);
+            if (kayit == null)
             {
                 return BadRequest();
             }
-            _service.Delete(model);
-            _service.SaveChanges();
+            _service.Delete(kayit);
+            await _service.SaveChangesAsync();
             return StatusCode(StatusCodes.Status200OK);
-
         }
     }
 }
