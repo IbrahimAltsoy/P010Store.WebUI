@@ -10,9 +10,15 @@
             </a>
 
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                @foreach (var altKategory in Model.Where(c => c.IsActive && c.ParentId == itemAnaKategory.Id && c.IsTopMenu == true))
+                {
+                    <li>
+                        <a class="btn dropdown-toggle" href="/@altKategory.Name.ToLower()/Categories/Index/@altKategory.Id" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            @altKategory.Name
+            </a></li>
+                }
+               
+               
             </ul>
         </div>
     }

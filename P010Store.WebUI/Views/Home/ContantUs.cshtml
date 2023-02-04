@@ -62,5 +62,32 @@
     </div>
 </div>
 
+<div id="sonuc" class="alert alert-info" style="display:none"></div>
+@section Scripts{
+    <script>
+        function iletisim_formu(){
+            var ad = $("#Name").val();
+            var soyad = $("#Surname").val();
+            var email = $("#Email").val();
+            var phone = $("#Phone").val();
+            var mesaj = $("#Message").val();
+            var messaje = {
+                "Name":ad,
+                "Surname": soyad,
+                "Email": email,
+                "Phone":phone,
+                "Message": mesaj
+            };
+            $.ajax({
+                method: "post",
+                url: "/ContactUs",
+                type: "json",
+                data: messaje,
+                success: function (){
 
+                }
+            });
+        }
+    </script>
+}
 
