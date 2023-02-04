@@ -17,7 +17,7 @@ namespace P010Store.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.1")
+                .HasAnnotation("ProductVersion", "7.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -99,10 +99,19 @@ namespace P010Store.Data.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool?>("IsTopMenu")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("OrderNo")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ParentId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -248,7 +257,7 @@ namespace P010Store.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreateDate = new DateTime(2022, 12, 17, 10, 20, 39, 434, DateTimeKind.Local).AddTicks(6281),
+                            CreateDate = new DateTime(2023, 1, 29, 10, 24, 25, 309, DateTimeKind.Local).AddTicks(4678),
                             Email = "admin@projeuygulamasi.com",
                             IsActive = true,
                             IsAdmin = true,

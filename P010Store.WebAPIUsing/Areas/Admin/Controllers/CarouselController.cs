@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using P010Store.Entities;
 using P010Store.WebAPIUsing.Utils;
-using System.Drawing.Drawing2D;
 
 namespace P010Store.WebAPIUsing.Areas.Admin.Controllers
 {
-    [Area("Admin"), Authorize]
+    [Area("Admin"), Authorize(Policy = "AdminPolicy")]
     public class CarouselController : Controller
     {
         private readonly HttpClient _httpClient;
@@ -100,17 +98,19 @@ namespace P010Store.WebAPIUsing.Areas.Admin.Controllers
         // POST: CarouselController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteAsync(int id, IFormCollection collection)
+        public async Task<ActionResult> DeleteAsync(int id, Carousel collection)
         {
             try
             {
+                FileHelpers.FieRemover(collection.Image);
                 await _httpClient.DeleteAsync(_apiAdres + "/" + id);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                ModelState.AddModelError("", "Hata Oluştu!");
             }
+            return View(collection);
         }
     }
 }

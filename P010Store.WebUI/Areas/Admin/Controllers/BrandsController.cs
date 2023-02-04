@@ -20,7 +20,7 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
         public async Task<IActionResult> IndexAsync()
         {
             //var model = _service.GetAll();
-            List<Brand> brands =await _service.GetAllAsync();
+            List<Brand> brands = await _service.GetAllAsync();
 
             return View(brands);
         }

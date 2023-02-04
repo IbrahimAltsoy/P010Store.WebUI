@@ -4,7 +4,7 @@ using P010Store.Service.Absract;
 
 namespace P010Store.WebUI.ViewComponents
 {
-    public class Categories: ViewComponent
+    public class Categories : ViewComponent
     {
         private readonly IService<Category> _service;
 
@@ -12,9 +12,12 @@ namespace P010Store.WebUI.ViewComponents
         {
             _service = service;
         }
+
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            return View(await _service.GetAllAsync());
+            // var model = await _service.GetAllAsync();
+            return View(await _service.GetAllAsync(c => c.IsActive && c.IsTopMenu==true));
         }
+
     }
 }

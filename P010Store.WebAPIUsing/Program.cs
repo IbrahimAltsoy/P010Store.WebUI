@@ -3,8 +3,9 @@ using P010Store.Data;
 using P010Store.Service.Absract;
 using P010Store.Service.Concreate;
 
-
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

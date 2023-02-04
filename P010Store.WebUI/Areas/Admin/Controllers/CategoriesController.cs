@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using P010Store.Entities;
 using P010Store.Service.Absract;
 using P010Store.WebUI.Utils;
@@ -17,9 +18,9 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
         }
 
         // GET: CategoriesController
-        public async Task<ActionResult> IndexAsync()
+        public async Task<ActionResult> Index()
         {
-            var model =await _service.GetAllAsync();
+            var model = await _service.GetAllAsync();
             return View(model);
         }
 
@@ -30,8 +31,9 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
         }
 
         // GET: CategoriesController/Create
-        public ActionResult Create()
+        public async Task<ActionResult> CreateAsync()
         {
+            ViewBag.ParentId = new SelectList(await _service.GetAllAsync(), "Id", "Name");
             return View();
         }
 
@@ -47,14 +49,14 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
                     if (Image is not null) category.Image = await FileHelpers.FileLoaderAsync(Image);
                     await _service.AddAsync(category);
                     await _service.SaveChangesAsync();
-                    return RedirectToAction(nameof(IndexAsync));
+                    return RedirectToAction(nameof(Index));
                 }
                 catch
                 {
                     ModelState.AddModelError("", "Hata Oluştu!");
                 }
             }
-
+            ViewBag.ParentId = new SelectList(await _service.GetAllAsync(), "Id", "Name");
             return View(category);
         }
         
@@ -76,13 +78,14 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
                     ModelState.AddModelError("", "Hata Oluştu!");
                 }
             }
-
+            ViewBag.ParentId = new SelectList(await _service.GetAllAsync(), "Id", "Name");
             return View(category);
         }
 
         // GET: CategoriesController/Edit/5
         public async Task<ActionResult> EditAsync(int id)
         {
+            ViewBag.ParentId = new SelectList(await _service.GetAllAsync(), "Id", "Name");
             var model = await _service.FindAsync(id);
             return View(model);
         }
@@ -99,14 +102,14 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
                     if (Image is not null) category.Image = await FileHelpers.FileLoaderAsync(Image);
                     _service.Update(category);
                     await _service.SaveChangesAsync();
-                    return RedirectToAction(nameof(IndexAsync));
+                    return RedirectToAction(nameof(Index));
                 }
                 catch
                 {
                     ModelState.AddModelError("", "Hata Oluştu!");
                 }
             }
-
+            ViewBag.ParentId = new SelectList(await _service.GetAllAsync(), "Id", "Name");
             return View(category);
         }
 
@@ -127,7 +130,7 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
                 FileHelpers.FieRemover(category.Image);
                 _service.Delete(category);
                 _service.SaveChanges();
-                return RedirectToAction(nameof(IndexAsync));
+                return RedirectToAction(nameof(Index));
             }
             catch
             {

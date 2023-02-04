@@ -101,6 +101,7 @@ namespace P010Store.WebAPIUsing.Areas.Admin.Controllers
         {
             try
             {
+                FileHelpers.FieRemover(category.Image);
                 await _httpClient.DeleteAsync(_apiAdres + "/" + id);
                 return RedirectToAction(nameof(Index));
             }

@@ -16,9 +16,9 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
         }
 
         // GET: UsersController
-        public async Task<ActionResult> IndexAsync()
+        public ActionResult Index()
         {
-            var model =await _service.GetAllAsync();
+            var model = _service.GetAllAsync();
             return View(model);
         }
 
@@ -45,7 +45,7 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
                 {
                     await _service.AddAsync(user);
                     await _service.SaveChangesAsync();
-                    return RedirectToAction(nameof(IndexAsync));
+                    return RedirectToAction(nameof(Index));
                 }
                 catch
                 {
@@ -74,7 +74,7 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
                 {
                     _service.Update(user);
                     await _service.SaveChangesAsync();
-                    return RedirectToAction(nameof(IndexAsync));
+                    return RedirectToAction(nameof(Index));
                 }
                 catch
                 {
@@ -101,7 +101,7 @@ namespace P010Store.WebUI.Areas.Admin.Controllers
             {
                 _service.Delete(user);
                 _service.SaveChanges();
-                return RedirectToAction(nameof(IndexAsync));
+                return RedirectToAction(nameof(Index));
             }
             catch
             {

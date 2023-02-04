@@ -21,7 +21,13 @@ namespace P010Store.Entities
 
         [Display(Name = "Durum")]
         public bool IsActive { get; set; }
+        [Display(Name = "Üst Menüde Göster")]
+        public bool? IsTopMenu { get; set; }
+        [Display(Name = "Üst Kategory")]
+        public int ParentId { get; set; }
+        [Display(Name = "Kategory Sıra No")]
+        public int OrderNo { get; set; }
 
-       public virtual ICollection<Product>? Products { get; set; }
+        public virtual ICollection<Product>? Products { get; set; }
     }
 }

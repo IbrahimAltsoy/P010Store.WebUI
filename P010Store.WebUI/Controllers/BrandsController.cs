@@ -17,7 +17,7 @@ namespace P010Store.WebUI.Controllers
 
         public async Task<IActionResult> IndexAsync(int id)
         {
-            var model = new BrandsPageViewModel()
+            var model = new BrandPageViewModel()
             {
                 Brand = await _serviceBrand.FindAsync(id),
                 Products = await _service.GetAllAsync(p => p.IsActive && p.BrandId == id)

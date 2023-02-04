@@ -1,8 +1,19 @@
 ﻿@model IEnumerable<Category>
 
 @{
-    foreach (var item in Model)
+    foreach (var itemAnaKategory in Model.Where(c=>c.IsActive && c.ParentId==0 && c.IsTopMenu==true))
     {
-        <li class="nav-item"><a class="nav-link active" href="/Categories/Index/@item.Id">@item.Name</a></li>
+        
+        <div class="dropdown">
+            <a class="btn dropdown-toggle" href="/@itemAnaKategory.Name.ToLower()/Categories/Index/@itemAnaKategory.Id" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                @itemAnaKategory.Name
+            </a>
+
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+        </div>
     }
 }

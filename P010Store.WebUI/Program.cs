@@ -4,9 +4,7 @@ using P010Store.Data.Concrete;
 using P010Store.Service.Absract;
 using P010Store.Service.Concreate;
 using Microsoft.AspNetCore.Authentication.Cookies; // oturum iþlemi için gerekli kütüphane
-using P010Store.Data.Absract;
-using P010Store.Service.Absract;
-using P010Store.Service.Concreate;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
