@@ -44,7 +44,7 @@ namespace P010Store.WebUI.Controllers
         }
 
         [Route("iletisim"), HttpPost]
-        public async Task<IActionResult> ContactUs(Contact contact)
+        public async Task<IActionResult> ContactUsAsync(Contact contact)
         {
             if (ModelState.IsValid) 
             {
