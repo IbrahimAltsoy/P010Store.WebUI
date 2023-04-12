@@ -5,7 +5,7 @@ using P010Store.Service.Absract;
 using P010Store.Service.Concreate;
 using Microsoft.AspNetCore.Authentication.Cookies; // oturum iþlemi için gerekli kütüphane
 
-
+//i@gmail.com þifre 1234
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
